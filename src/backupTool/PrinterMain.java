@@ -17,8 +17,6 @@ public class PrinterMain {
 			e.printStackTrace();
 		}
 	}
-	public static void print() {
-		System.out.println("hello");
-	}
+
 
 }
