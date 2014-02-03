@@ -31,6 +31,7 @@ public class PrinterMain {
 							try {
 								Files.copy(dir, targetdir);
 							} catch (final FileAlreadyExistsException e) {
+
 								if (!Files.isDirectory(targetdir)) {
 									throw e;
 								}
@@ -44,7 +45,7 @@ public class PrinterMain {
 						@Override
 						public FileVisitResult visitFile(final Path file,
 								final BasicFileAttributes attrs) throws IOException {
-							// Files.deleteIfExists(file);
+							Files.deleteIfExists(target.resolve(source.relativize(file)));
 							Files.copy(file, target.resolve(source.relativize(file)));
 							return CONTINUE;
 						}
