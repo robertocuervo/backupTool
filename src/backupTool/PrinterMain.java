@@ -7,6 +7,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
@@ -18,11 +19,9 @@ public class PrinterMain {
 	public static void main(final String[] args) {
 		final Path source = Paths.get(args[0]);
 		final Path target = Paths.get(args[1]);
-
 		final PrintFiles pf = new PrintFiles();
 		try {
 			Files.walkFileTree(source, pf);
-
 			Files.walkFileTree(source, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE,
 					new SimpleFileVisitor<Path>() {
 						@Override
@@ -35,6 +34,9 @@ public class PrinterMain {
 								if (!Files.isDirectory(targetdir)) {
 									throw e;
 								}
+
+							} catch (final NoSuchFileException e) {
+								System.err.println("this file don't exists: " + dir.getFileName());
 							}
 							return CONTINUE;
 						}
@@ -42,6 +44,7 @@ public class PrinterMain {
 						@Override
 						public FileVisitResult visitFile(final Path file,
 								final BasicFileAttributes attrs) throws IOException {
+							// Files.deleteIfExists(file);
 							Files.copy(file, target.resolve(source.relativize(file)));
 							return CONTINUE;
 						}
