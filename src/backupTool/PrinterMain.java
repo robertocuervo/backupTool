@@ -7,16 +7,14 @@ import java.nio.file.Paths;
 
 public class PrinterMain {
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 
-		PrintFiles pf = new PrintFiles();
-		Path source = Paths.get(args[0]);
+		final PrintFiles pf = new PrintFiles();
+		final Path source = Paths.get(args[0]);
 		try {
 			Files.walkFileTree(source, pf);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
-
-
 }
