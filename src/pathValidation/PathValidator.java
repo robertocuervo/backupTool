@@ -16,8 +16,10 @@ public class PathValidator implements IValidation {
 		} else {
 			final Path fileToCheck = Paths.get(path);
 			if (fileToCheck != null) {
-				isValidPath = Files.exists(fileToCheck) & !Files.notExists(fileToCheck)
-						& Files.isWritable(fileToCheck) & Files.isReadable(fileToCheck)
+				isValidPath = Files.exists(fileToCheck)
+						& !Files.notExists(fileToCheck)
+						& Files.isWritable(fileToCheck)
+						& Files.isReadable(fileToCheck)
 						& Files.isExecutable(fileToCheck);
 			}
 			if (!isValidPath) {

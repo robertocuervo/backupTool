@@ -14,45 +14,62 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.EnumSet;
 
+import pathValidation.PathValidator;
+import validation.contract.IValidation;
+
 public class PrinterMain {
 
 	public static void main(final String[] args) {
-		final Path source = Paths.get(args[0]);
-		final Path target = Paths.get(args[1]);
-		final PrintFiles pf = new PrintFiles();
-		try {
-			Files.walkFileTree(source, pf);
-			Files.walkFileTree(source, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE,
-					new SimpleFileVisitor<Path>() {
-						@Override
-						public FileVisitResult preVisitDirectory(final Path dir,
-								final BasicFileAttributes attrs) throws IOException {
-							final Path targetdir = target.resolve(source.relativize(dir));
-							try {
-								Files.copy(dir, targetdir);
-							} catch (final FileAlreadyExistsException e) {
+		final IValidation pathValidator = new PathValidator();
 
-								if (!Files.isDirectory(targetdir)) {
-									throw e;
+		if (pathValidator.isValidPath(args[0])
+				&& (pathValidator.isValidPath(args[1]))) {
+			final Path source = Paths.get(args[0]);
+			final Path target = Paths.get(args[1]);
+			final PrintFiles pf = new PrintFiles();
+			try {
+				Files.walkFileTree(source, pf);
+				Files.walkFileTree(source,
+						EnumSet.of(FileVisitOption.FOLLOW_LINKS),
+						Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
+							@Override
+							public FileVisitResult preVisitDirectory(
+									final Path dir,
+									final BasicFileAttributes attrs)
+									throws IOException {
+								final Path targetdir = target.resolve(source
+										.relativize(dir));
+								try {
+									Files.copy(dir, targetdir);
+								} catch (final FileAlreadyExistsException e) {
+
+									if (!Files.isDirectory(targetdir)) {
+										throw e;
+									}
+
+								} catch (final NoSuchFileException e) {
+									System.err
+											.println("this file don't exists: "
+													+ dir.getFileName());
 								}
-
-							} catch (final NoSuchFileException e) {
-								System.err.println("this file don't exists: " + dir.getFileName());
+								return CONTINUE;
 							}
-							return CONTINUE;
-						}
 
-						@Override
-						public FileVisitResult visitFile(final Path file,
-								final BasicFileAttributes attrs) throws IOException {
-							Files.deleteIfExists(target.resolve(source.relativize(file)));
-							Files.copy(file, target.resolve(source.relativize(file)));
-							return CONTINUE;
-						}
-					});
+							@Override
+							public FileVisitResult visitFile(final Path file,
+									final BasicFileAttributes attrs)
+									throws IOException {
+								Files.deleteIfExists(target.resolve(source
+										.relativize(file)));
+								Files.copy(file,
+										target.resolve(source.relativize(file)));
+								return CONTINUE;
+							}
+						});
 
-		} catch (final IOException e) {
-			e.printStackTrace();
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
