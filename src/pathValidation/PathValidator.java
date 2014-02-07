@@ -6,6 +6,11 @@ import java.nio.file.Paths;
 
 import validation.contract.IValidation;
 
+/**
+ * 
+ * @author robertocuervoalvarez
+ * 
+ */
 public class PathValidator implements IValidation {
 
 	public boolean isValidPath(final String path) {
@@ -16,10 +21,8 @@ public class PathValidator implements IValidation {
 		} else {
 			final Path fileToCheck = Paths.get(path);
 			if (fileToCheck != null) {
-				isValidPath = Files.exists(fileToCheck)
-						& !Files.notExists(fileToCheck)
-						& Files.isWritable(fileToCheck)
-						& Files.isReadable(fileToCheck)
+				isValidPath = Files.exists(fileToCheck) & !Files.notExists(fileToCheck)
+						& Files.isWritable(fileToCheck) & Files.isReadable(fileToCheck)
 						& Files.isExecutable(fileToCheck);
 			}
 			if (!isValidPath) {
