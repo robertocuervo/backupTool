@@ -11,7 +11,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 /**
  * Visit all files and directories and print the files and directories
  * 
- * @author robertocuervoalvarez
+ * @author Roberto Cuervo
  * 
  */
 public class PrintFiles extends SimpleFileVisitor<Path> {

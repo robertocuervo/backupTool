@@ -7,8 +7,7 @@ import java.nio.file.Paths;
 import validation.contract.IValidation;
 
 /**
- * 
- * @author robertocuervoalvarez
+ * @author Roberto Cuervo
  * 
  */
 public class PathValidator implements IValidation {

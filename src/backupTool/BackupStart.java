@@ -47,6 +47,7 @@ public class BackupStart {
 									final BasicFileAttributes attrs) throws IOException {
 								final Path targetdir = target.resolve(source.relativize(dir));
 								try {
+									System.out.format("Directory: %s%n", dir);
 									Files.copy(dir, targetdir);
 								} catch (final FileAlreadyExistsException e) {
 
